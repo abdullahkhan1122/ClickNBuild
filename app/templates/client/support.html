@@ -1,0 +1,239 @@
+{% extends 'client/base.html' %}
+
+{% block title %}Support - ClickNBuild{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/client_css/support.css') }}">
+<style>
+    .support-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .support-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .support-header h1 {
+        color: #333;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    .support-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .support-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .support-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .support-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .support-card h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+
+    .contact-info {
+        margin-top: 20px;
+    }
+
+    .contact-info p {
+        margin: 10px 0;
+        color: #555;
+    }
+
+    .contact-info i {
+        margin-right: 10px;
+        color: #007bff;
+    }
+
+    .faq-section {
+        margin-top: 50px;
+    }
+
+    .faq-item {
+        margin-bottom: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .faq-question {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .faq-answer {
+        padding: 15px 20px;
+        background: #fff;
+        display: none;
+    }
+
+    .faq-item.active .faq-answer {
+        display: block;
+    }
+
+    .support-form {
+        margin-top: 40px;
+        background: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .form-group textarea {
+        height: 150px;
+        resize: vertical;
+    }
+
+    .submit-btn {
+        background: #007bff;
+        color: #fff;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="support-container">
+    <div class="support-header">
+        <h1>How Can We Help You?</h1>
+        <p>We're here to assist you with any questions or concerns you may have.</p>
+    </div>
+
+    <div class="support-grid">
+        <div class="support-card">
+            <h2>Contact Information</h2>
+            <div class="contact-info">
+                <p><i class="fas fa-phone"></i> Phone: 03455911326</p>
+                <p><i class="fas fa-envelope"></i> Email: dilawarkdk321@gmail.com</p>
+                <p><i class="fas fa-clock"></i> Support Hours: 9:00 AM - 6:00 PM (PST)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>How do I create a new project?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>To create a new project, go to the "Create Project" page and fill in all the required details about your project. Make sure to provide clear specifications and requirements.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>How can I track my project's progress?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>You can track your project's progress by visiting the "My Projects" page. Each project will show its current status and any updates from the assigned builder.</p>
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                <span>What should I do if I have an issue with a builder?</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+                <p>If you encounter any issues with a builder, please contact our support team immediately. We'll help resolve the matter and ensure your project continues smoothly.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="support-form">
+        <h2>Contact Support</h2>
+        <form id="supportForm" method="POST" action="{{ url_for('client.submit_support_request') }}">
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // FAQ Accordion functionality
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', () => {
+            item.classList.toggle('active');
+        });
+    });
+
+    // Support form submission
+    const supportForm = document.getElementById('supportForm');
+    if (supportForm) {
+        supportForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add form submission logic here
+            alert('Your support request has been submitted. We will get back to you soon!');
+            this.reset();
+        });
+    }
+});
+</script>
+{% endblock %}

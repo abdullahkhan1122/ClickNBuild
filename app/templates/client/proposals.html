@@ -1,0 +1,183 @@
+{% extends 'client/base.html' %}
+{% block title %}Proposals Received - ClickNBuild{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/client_css/my_projects.css') }}" />
+<style>
+  .bid-actions {
+    display: flex !important;
+    gap: 10px !important;
+    margin-top: 10px !important;
+  }
+  .btn-success, .btn-danger {
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    display: inline-block !important;
+    visibility: visible !important;
+  }
+  .modal-content {
+    max-width: 600px;
+    padding: 20px;
+  }
+  .modal-content p {
+    margin: 10px 0;
+  }
+  .project-info {
+    padding: 15px;
+  }
+  .project-info h3 {
+    margin: 0 0 10px;
+    font-size: 1.2em;
+  }
+  .project-posted span {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .empty-state {
+
+    align-items: center;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="container">
+  <div class="page-header">
+    <h1>Proposals Received</h1>
+  </div>
+
+  <div class="project-cards">
+    {% if bids %}
+    {% for bid, builder, user, project in bids %}
+    <div class="project-card">
+      <div class="project-image">
+        <img src="{{ url_for('static', filename=(project.images[0].image_path if project.images else project.image_path if project.image_path else 'images/default_project.png')) }}" alt="Project Image" />
+      </div>
+
+      <div class="project-info">
+        <h3 class="project-title">
+          {{ user.username if user and user.username else user.email.split('@')[0] if user and user.email else 'Unknown Builder' }}
+        </h3>
+        <div class="project-posted">
+          <span>Estimated Cost: Rs {{ bid.estimated_cost }}</span>
+          <span>Status: 
+            <span class="project-status {% if bid.status == 'Pending' %}status-pending{% elif bid.status == 'Accepted' %}status-active{% elif bid.status == 'Rejected' %}status-completed{% endif %}">
+              {{ bid.status }}
+            </span>
+          </span>
+        </div>
+
+        <div class="bid-actions">
+          <button class="btn btn-outline view-details-btn" data-bid='{
+              "builder_username": {{ (user.username if user and user.username else user.email.split('@')[0] if user and user.email else "Unknown Builder")|tojson }},
+              "project_title": {{ project.title|tojson }},
+              "estimated_cost": {{ bid.estimated_cost }},
+              "timeline": {{ bid.timeline }},
+              "status": {{ bid.status|tojson }},
+              "proposal": {{ bid.proposal|tojson }},
+              "mainImage": {{ (project.images[0].image_path if project.images else project.image_path if project.image_path else "images/default_project.png")|tojson }}
+            }'>
+            View Details
+          </button>
+        
+          {% if bid.status == 'Pending' %}
+          <form method="POST" action="{{ url_for('client.accept_bid', bid_id=bid.bid_id) }}">
+            <button class="btn btn-success" type="submit">Accept</button>
+          </form>
+          <form method="POST" action="{{ url_for('client.reject_bid', bid_id=bid.bid_id) }}">
+            <button class="btn btn-danger" type="submit">Reject</button>
+          </form>
+          {% else %}
+          <span class="text-muted">This bid is {{ bid.status.lower() }}</span>
+          {% endif %}
+        </div>
+        
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="empty-state">
+      <h2>No Bids Received</h2>
+      <p>No bids have been received on your projects yet.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Modal for Bid Details -->
+<div id="bidModal" class="modal">
+  <div class="modal-content">
+    <span class="close">×</span>
+    <img id="modal-main-image" src="" alt="Project Image" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 15px;" />
+    <h2 id="modal-title"></h2>
+    <p><strong>Builder:</strong> <span id="modal-builder-username"></span></p>
+    <p><strong>Project:</strong> <span id="modal-project-title"></span></p>
+    <p><strong>Estimated Cost:</strong> Rs <span id="modal-estimated-cost"></span></p>
+    <p><strong>Timeline:</strong> <span id="modal-timeline"></span> weeks</p>
+    <p><strong>Status:</strong> <span id="modal-status"></span></p>
+    <p><strong>Proposal:</strong></p>
+    <p id="modal-proposal"></p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("bidModal");
+    const closeBtn = document.querySelector(".close");
+    const viewDetailBtns = document.querySelectorAll(".view-details-btn");
+
+    // Open modal with bid data
+    function openModal(bidData) {
+      document.getElementById("modal-title").textContent = `${bidData.builder_username} - ${bidData.project_title}`;
+      document.getElementById("modal-builder-username").textContent = bidData.builder_username;
+      document.getElementById("modal-project-title").textContent = bidData.project_title;
+      document.getElementById("modal-estimated-cost").textContent = bidData.estimated_cost;
+      document.getElementById("modal-timeline").textContent = bidData.timeline;
+      document.getElementById("modal-status").textContent = bidData.status;
+      document.getElementById("modal-proposal").textContent = bidData.proposal;
+
+      const mainImage = document.getElementById("modal-main-image");
+      mainImage.style.opacity = 0;
+      setTimeout(() => {
+        mainImage.src = "/static/" + bidData.mainImage;
+        mainImage.style.opacity = 1;
+      }, 200);
+
+      modal.style.display = "flex";
+      setTimeout(() => {
+        modal.classList.add("show");
+      }, 10);
+    }
+
+    // Close modal function
+    function closeModal() {
+      modal.classList.remove("show");
+      setTimeout(() => {
+        modal.style.display = "none";
+      }, 300);
+    }
+
+    // Event listeners for view details buttons
+    viewDetailBtns.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const bidData = JSON.parse(this.dataset.bid);
+        openModal(bidData);
+      });
+    });
+
+    // Close modal when clicking X or outside
+    closeBtn.addEventListener("click", closeModal);
+    window.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Keyboard navigation for closing modal
+    document.addEventListener("keydown", function (e) {
+      if (modal.style.display === "flex" && e.key === "Escape") {
+        closeModal();
+      }
+    });
+  });
+</script>
+{% endblock %}

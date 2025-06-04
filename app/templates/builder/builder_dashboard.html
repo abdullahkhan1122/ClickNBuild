@@ -1,0 +1,77 @@
+{% extends 'builder/builder_base.html' %} {% block title %}Builder Dashboard{%
+endblock %} {% block style %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/client_css/dashboard.css') }}"
+/>
+{% endblock %} {% block content %}
+<div class="dashboard-container">
+  <main class="main-content">
+    <div class="dashboard-header">
+      <h1>Welcome, {{ user.username|title }}!</h1>
+      
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Active Bids</h3>
+        <p>{{ active_bids }}</p>
+      </div>
+      <div class="card">
+        <h3>Accepted Bids</h3>
+        <p>{{ accepted_bids }}</p>
+      </div>
+      <div class="card">
+        <h3>Rejected Bids</h3>
+        <p>{{ rejected_bids }}</p>
+      </div>
+      <div class="card">
+        <h3>Projects Won</h3>
+        <p>{{ won_projects }}</p>
+      </div>
+    </div>
+
+    <!-- Recent Bids Table -->
+    <div class="projects-table">
+      <h2>Recent Bids</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Cost (Rs)</th>
+            <th>Timeline (weeks)</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if recent_bids %} {% for bid, project in recent_bids %}
+          <tr>
+            <td>{{ project.title }}</td>
+            <td>{{ bid.estimated_cost }}</td>
+            <td>{{ bid.timeline }}</td>
+            <td
+              class="{% if bid.status == 'Accepted' %}status-completed{% elif bid.status == 'Rejected' %}status-pending{% else %}status-in-progress{% endif %}"
+            >
+              {{ bid.status }}
+            </td>
+            <td>
+              <a href="{{ url_for('builder.edit_bid', bid_id=bid.bid_id) }}"
+                >Edit</a
+              >
+            </td>
+          </tr>
+          {% endfor %} {% else %}
+          <tr>
+            <td colspan="5" style="text-align: center">
+              No bids submitted yet.
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+{% endblock %}

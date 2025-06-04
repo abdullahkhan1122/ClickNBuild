@@ -1,0 +1,240 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    background-color: #f8fafc;
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+    color: #4a6fa5;
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-size: 28px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: #ff7e5f;
+    border-radius: 2px;
+}
+
+.project-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.form label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 15px;
+}
+
+.form input,
+.form textarea,
+.form select {
+    padding: 12px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+}
+
+.form input:focus,
+.form textarea:focus,
+.form select:focus {
+    outline: none;
+    border-color: #4a6fa5;
+    box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
+    background-color: white;
+}
+
+.form textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.image-upload {
+    border: 2px dashed #e2e8f0;
+    padding: 25px;
+    text-align: center;
+    border-radius: 8px;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+}
+
+.image-upload:hover {
+    border-color: #4a5759;
+}
+
+.image-upload p {
+    color: #718096;
+    margin-bottom: 15px;
+}
+
+.selected-img-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.image-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+}
+
+.image-preview:hover {
+    transform: scale(1.03);
+}
+
+.remove-image {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff7e5f;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+}
+
+.remove-image:hover {
+    background: #e74c3c;
+    transform: scale(1.1);
+}
+
+.submit-btn {
+    background-color: #4a5759;
+    color: white;
+    padding: 14px;
+    width: 50%;
+    align-self: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.submit-btn:hover {
+    background-color: #3a4749;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+.upload-btn {
+    background: #aec3b0;
+    color: white !important;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-block;
+    margin: 10px auto 0;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 14px;
+}
+
+.upload-btn:hover {
+    background: #aec3b0;
+}
+
+.budget-timeline {
+    display: flex;
+    gap: 20px;
+}
+
+.budget-timeline .form {
+    flex: 1;
+}
+
+.currency-symbol {
+    position: relative;
+}
+
+.currency-symbol::before {
+    content: 'Rs';
+    position: absolute;
+    left: 12px;
+    top: 38px;
+    color: #718096;
+    font-weight: 500;
+}
+
+.currency-symbol input {
+    padding-left: 40px !important;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        padding: 25px;
+    }
+
+    .budget-timeline {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .submit-btn {
+        width: 100%;
+    }
+}

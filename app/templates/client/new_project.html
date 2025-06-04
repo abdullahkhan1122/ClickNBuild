@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/css/client_css/new_project.css" />
+    <title>Create New Project</title>
+    <style>
+      .image-preview {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin: 5px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .remove-image {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .selected-images {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Create New Project</h2>
+
+      <form
+        id="projectForm"
+        class="project-post-form"
+        method="POST"
+        action="{{ url_for('client.addNewProject') }}"
+        enctype="multipart/form-data"
+      >
+        <div class="form">
+          <label for="title">Project Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            required
+            placeholder="Modern House Construction"
+          />
+        </div>
+
+        <div class="form">
+          <label for="projectType">Project Type</label>
+          <select id="projectType" name="projectType" required>
+            <option value="Residential Construction">
+              Residential Construction
+            </option>
+            <option value="Commercial Construction">
+              Commercial Construction
+            </option>
+            <option value="Renovation">Renovation</option>
+            <option value="Repairing">Repair Work</option>
+            <option value="Interior Design">Interior Design</option>
+          </select>
+        </div>
+
+        <div class="form">
+          <label for="location">Location</label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            required
+            placeholder="City, Country"
+          />
+        </div>
+
+        <div class="form">
+          <label for="description">Project Description</label>
+          <textarea
+            id="description"
+            name="description"
+            required
+            placeholder="Detailed project requirements..."
+          ></textarea>
+        </div>
+
+        <div class="budget-timeline">
+          <div class="form">
+            <label for="budget">Estimated Budget</label>
+            <input
+              type="number"
+              id="budget"
+              name="budget"
+              required
+              placeholder="500000"
+            />
+          </div>
+
+          <div class="form">
+            <label for="timeline">Estimated Timeline (weeks)</label>
+            <input
+              type="number"
+              id="timeline"
+              name="timeline"
+              required
+              placeholder="12"
+            />
+          </div>
+        </div>
+
+        <div class="form">
+          <label for="project_images">Project Images</label>
+          <input
+            type="file"
+            id="project_images"
+            name="project_images"
+            accept="image/*"
+            multiple
+            required
+          />
+          <div id="selected-images" class="selected-images"></div>
+        </div>
+
+        <button type="submit" class="submit-btn">Create Project</button>
+      </form>
+    </div>
+
+    <script>
+      const fileInput = document.getElementById("project_images");
+      const selectedImagesDiv = document.getElementById("selected-images");
+
+      fileInput.addEventListener("change", function (event) {
+        const files = event.target.files;
+        selectedImagesDiv.innerHTML = ""; // Clear old previews
+
+        for (const file of files) {
+          if (!file.type.match("image.*")) continue;
+
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const imageContainer = document.createElement("div");
+            imageContainer.style.position = "relative";
+
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.classList.add("image-preview");
+
+            const removeBtn = document.createElement("span");
+            removeBtn.classList.add("remove-image");
+            removeBtn.innerHTML = "&times;";
+            removeBtn.onclick = function () {
+              imageContainer.remove();
+            };
+
+            imageContainer.appendChild(img);
+            imageContainer.appendChild(removeBtn);
+            selectedImagesDiv.appendChild(imageContainer);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      document
+        .getElementById("projectForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault(); // still prevent default
+
+          const formData = new FormData(this);
+
+          fetch(this.action, {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => {
+              if (response.ok) {
+                alert("Project created successfully!");
+                this.reset();
+                selectedImagesDiv.innerHTML = "";
+                parent.document.getElementById("newProjectPost").style.display =
+                  "none"; // optional
+              } else {
+                alert("Error saving project!");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              alert("Something went wrong.");
+            });
+        });
+    </script>
+  </body>
+</html>

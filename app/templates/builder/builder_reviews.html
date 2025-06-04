@@ -1,0 +1,123 @@
+{% extends 'builder/builder_base.html' %}
+
+{% block title %}Reviews - ClickNBuild{% endblock %}
+
+{% block style %}
+<style>
+.reviews-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.review-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.project-title {
+    font-size: 1.2em;
+    color: #333;
+    margin: 0;
+}
+
+.reviewer-info {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.rating {
+    color: #ffd700;
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.review-comment {
+    color: #444;
+    line-height: 1.6;
+    margin: 15px 0;
+}
+
+.review-meta {
+    color: #888;
+    font-size: 0.85em;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.page-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #666;
+    padding: 40px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.star-rating {
+    color: #ffd700;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reviews-container">
+    <h1 class="page-title">Project Reviews</h1>
+
+    {% if reviews %}
+        {% for review, project, reviewer in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <div>
+                        <h3 class="project-title">{{ project.title }}</h3>
+                        <div class="reviewer-info">
+                            Reviewed by: {{ reviewer.username }} ({{ review.role|capitalize }})
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rating">
+                    {% for _ in range(review.rating) %}
+                        <span class="star-rating">★</span>
+                    {% endfor %}
+                    {% for _ in range(5 - review.rating) %}
+                        <span class="star-rating" style="color: #ddd;">★</span>
+                    {% endfor %}
+                </div>
+
+                <div class="review-comment">
+                    {{ review.comment }}
+                </div>
+
+                <div class="review-meta">
+                    <span>Project Type: {{ project.project_type }}</span> |
+                    <span>Status: {{ project.status }}</span> |
+                    <span>Date: {{ review.created_at.strftime('%B %d, %Y') if review.created_at else 'N/A' }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-reviews">
+            <h3>No Reviews Yet</h3>
+            <p>Once your projects are completed, reviews from clients will appear here.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

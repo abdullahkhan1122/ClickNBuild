@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header>
+      <div class="logo-container">
+        <div class="logo-img">
+          <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="Logo"
+          />
+        </div>
+        <div class="logo">Click<span>N</span>Build</div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/builder-homepage">Home</a></li>
+          <li><a href="/builder-dashboard">Dashboard</a></li>
+          <li><a href="/builder-marketplace">Marketplace</a></li>
+          <li><a href="/builder-profile">Profile</a></li>
+        </ul>
+      </nav>
+    </header>
+  </body>
+</html>

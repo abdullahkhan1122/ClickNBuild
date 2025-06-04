@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      .sidebar {
+        width: 280px;
+        background: #4a5759;
+        color: #ffffff;
+        padding: 20px 0;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .sidebar-menu li {
+        padding: 12px 20px;
+        margin: 5px 0;
+        transition: all 0.3s ease;
+        border-radius: 5px;
+      }
+      .sidebar-menu li:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+      }
+      .sidebar-menu li.active {
+        background: rgba(255, 255, 255, 0.2);
+        border-left: 4px solid #e74c3c;
+      }
+      .sidebar-menu a {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+      }
+      .sidebar-menu i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar" id="clientSidebar">
+      <ul class="sidebar-menu">
+        <li class="{{ 'active' if request.endpoint == 'dashboard' else '' }}">
+          <a href="{{ url_for('client.dashboard') }}"
+            ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+          >
+        </li>
+        <li class="{{ 'active' if request.endpoint == 'my_projects' else '' }}">
+          <a href="{{ url_for('client.my_projects') }}"
+            ><i class="fas fa-project-diagram"></i>My Projects</a
+          >
+        </li>
+        <li class="{{ 'active' if request.endpoint == 'proposals' else '' }}">
+          <a href="{{ url_for('client.proposals') }}"
+            ><i class="fas fa-file-alt"></i>Proposals</a
+          >
+        </li>
+        <li class="{{ 'active' if request.endpoint == 'payments' else '' }}">
+          <a href="{{ url_for('client.payments') }}"
+            ><i class="fas fa-credit-card"></i>Payments</a
+          >
+        </li>
+        <li class="{{ 'active' if request.endpoint == 'reviews' else '' }}">
+          <a href="{{ url_for('client.reviews') }}"
+            ><i class="fas fa-star"></i>Reviews</a
+          >
+        </li>
+        <li class="{{ 'active' if request.endpoint == 'support' else '' }}">
+          <a href="{{ url_for('client.support') }}"
+            ><i class="fas fa-headset"></i>Support</a
+          >
+        </li>
+      </ul>
+    </aside>
+  </body>
+</html>

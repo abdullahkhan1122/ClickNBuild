@@ -1,0 +1,503 @@
+{% extends 'builder/builder_base.html' %} {% block title %}Builder Projects{%
+endblock %} {% block style %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/client_css/my_projects.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/builder_css/place_bid_popup.css') }}"
+/>
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/client_css/review_modal.css') }}"
+/>
+{% endblock %} {% block content %}
+<section class="container">
+  <div class="page-header">
+    <h1>Available Projects</h1>
+    <p>Find projects and place your bids to get started!</p>
+  </div>
+
+  <div class="project-cards">
+    {% if projects %} {% for project in projects %}
+    <div class="project-card">
+      <div class="project-image">
+        {% if project.images %}
+        <img
+          src="{{ url_for('static', filename=project.images[0].image_path) }}"
+          alt="Project Image"
+        />
+        {% elif project.image_path %}
+        <img
+          src="{{ url_for('static', filename=project.image_path) }}"
+          alt="Project Image"
+        />
+        {% else %}
+        <img
+          src="{{ url_for('static', filename='images/default_project.png') }}"
+          alt="Default Image"
+        />
+        {% endif %}
+      </div>
+
+      <div class="project-info">
+        <h3 class="project-title">{{ project.title }}</h3>
+        <p><span class="project-type">{{ project.project_type }}</span></p>
+        <p><strong>Budget:</strong> Rs {{ project.budget }}</p>
+        <p>
+          <strong>Status:</strong>
+          <span
+            class="project-status {% if project.status == 'Open' %}status-active {% elif project.status == 'Completed' %}status-completed {% elif project.status == 'Pending' %}status-pending {% endif %}"
+          >
+            {{ project.status }}
+          </span>
+        </p>
+
+        <div class="project-actions" style="margin-top: 10px">
+          {% if project.project_id in bid_project_ids %}
+          <button class="btn btn-secondary" disabled>Bid Submitted</button>
+          {% else %}
+          <button
+            class="btn btn-primary open-bid-modal"
+            data-project-id="{{ project.project_id }}"
+          >
+            Place Bid
+          </button>
+          {% endif %}
+
+          <button
+            class="btn btn-outline view-details-btn"
+            data-project='{
+              "title": {{ project.title|tojson }},
+              "project_type": {{ project.project_type|tojson }},
+              "description": {{ project.description|tojson }},
+              "budget": {{ project.budget }},
+              "location": {{ project.location|tojson }},
+              "timeline": {{ project.timeline }},
+              "status": {{ project.status|tojson }},
+              "mainImage": {{ (project.images[0].image_path if project.images else project.image_path if project.image_path else "images/default_project.png")|tojson }},
+              "gallery": {{ project.images|map(attribute="image_path")|list|tojson }}
+            }'
+          >
+            View Details
+          </button>
+          {% if project.assigned_to == builder.builder_id and project.status != 'Completed' and not project.builder_completed %}
+          <form method="POST" action="{{ url_for('builder.complete_project', project_id=project.project_id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-success">Complete Project</button>
+          </form>
+          {% endif %}
+          {% if project.status == 'Completed' %}
+            {% set already_reviewed = reviews|selectattr('reviewer_id', 'equalto', session['user_id'])|selectattr('project_id', 'equalto', project.project_id)|list %}
+            {% if not already_reviewed %}
+              <button onclick="openReviewModal({{ project.project_id }}, '{{ project.title }}')" class="btn btn-primary">Give Review</button>
+            {% else %}
+              <div class="alert alert-info">You have already submitted a review for this project.</div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %} {% else %}
+    <div class="empty-state">
+      <h2>No Projects Available</h2>
+      <p>Currently no projects are available for bidding.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Modal for Project Details -->
+<div id="projectModal" class="modal">
+  <div class="modal-content">
+    <span class="close">×</span>
+    <div class="modal-image-container">
+      <button class="nav-arrow prev-arrow"><</button>
+      <img
+        id="modal-main-image"
+        src=""
+        alt="Main Project Image"
+        class="active-image"
+      />
+      <button class="nav-arrow next-arrow">></button>
+      <div class="image-counter"></div>
+    </div>
+    <h2 id="modal-title"></h2>
+    <p><strong>Type:</strong> <span id="modal-project-type"></span></p>
+    <p><strong>Description:</strong></p>
+    <p id="modal-description"></p>
+    <div class="project-meta">
+      <p><strong>Budget:</strong> Rs <span id="modal-budget"></span></p>
+      <p><strong>Location:</strong> <span id="modal-location"></span></p>
+      <p><strong>Timeline:</strong> <span id="modal-timeline"></span> weeks</p>
+      <p><strong>Status:</strong> <span id="modal-status"></span></p>
+    </div>
+    <div class="gallery-section" style="margin-top: 20px">
+      <h3>Gallery</h3>
+      <div id="gallery" class="gallery-images"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Place Bid Modal -->
+<div id="bidModal" class="modal">
+  <div class="modal-content bid-modal-content">
+    <span class="close-bid">×</span>
+    <h2>Place a Bid</h2>
+    <form
+      id="placeBidForm"
+      method="POST"
+      action="{{ url_for('builder.submit_bid') }}"
+    >
+      <input type="hidden" name="project_id" id="projectId" value="" />
+      <div class="form-group">
+        <label for="estimated_cost">Estimated Cost (Rs):</label>
+        <input
+          type="number"
+          id="estimated_cost"
+          name="estimated_cost"
+          required
+          min="1"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label for="timeline">Timeline (Weeks):</label>
+        <input
+          type="number"
+          id="timeline"
+          name="timeline"
+          required
+          min="1"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label for="proposal">Proposal:</label>
+        <textarea
+          id="proposal"
+          name="proposal"
+          required
+          class="form-control"
+          rows="4"
+        ></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Bid</button>
+    </form>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div id="reviewModal" class="review-modal">
+    <div class="review-modal-content">
+        <span class="review-modal-close">&times;</span>
+        <div class="review-modal-header">
+            <h2>Write a Review</h2>
+            <p id="review-project-title"></p>
+        </div>
+        <form id="reviewForm" class="review-form" method="POST">
+            <div class="rating-container">
+                <label>Rating:</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required>
+                    <label for="star5"></label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4"></label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3"></label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2"></label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1"></label>
+                </div>
+            </div>
+            <textarea name="comment" required placeholder="Write your review here... Please be honest and constructive in your feedback."></textarea>
+            <div class="review-error" id="reviewError"></div>
+            <button type="submit" class="review-submit-btn">Submit Review</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Define review modal functions in global scope
+function openReviewModal(projectId, projectTitle) {
+    const modal = document.getElementById('reviewModal');
+    const projectTitleElement = document.getElementById('review-project-title');
+    const form = document.getElementById('reviewForm');
+    
+    projectTitleElement.textContent = `Project: ${projectTitle}`;
+    modal.style.display = 'block';
+    
+    // Update form action with builder route
+    form.action = `/builder/submit_review/${projectId}`;
+}
+
+// Close review modal when clicking outside
+window.onclick = function(event) {
+    const reviewModal = document.getElementById('reviewModal');
+    if (event.target == reviewModal) {
+        reviewModal.style.display = 'none';
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Project Details Modal Handling (unchanged)
+    const modal = document.getElementById("projectModal");
+    const closeBtn = document.querySelector(".close");
+    const viewDetailBtns = document.querySelectorAll(".view-details-btn");
+    let currentProject = null;
+    let currentImageIndex = 0;
+
+    function openModal(projectData) {
+      currentProject = projectData;
+      currentImageIndex = 0;
+      document.getElementById("modal-title").textContent = projectData.title;
+      document.getElementById("modal-project-type").textContent =
+        projectData.project_type;
+      document.getElementById("modal-description").textContent =
+        projectData.description;
+      document.getElementById("modal-budget").textContent = projectData.budget;
+      document.getElementById("modal-location").textContent =
+        projectData.location;
+      document.getElementById("modal-timeline").textContent =
+        projectData.timeline;
+      document.getElementById("modal-status").textContent = projectData.status;
+
+      const mainImage = document.getElementById("modal-main-image");
+      mainImage.style.opacity = 0;
+      setTimeout(() => {
+        mainImage.src = "/static/" + projectData.mainImage;
+        mainImage.style.opacity = 1;
+      }, 200);
+
+      const galleryDiv = document.getElementById("gallery");
+      galleryDiv.innerHTML = "";
+      if (projectData.gallery && projectData.gallery.length > 0) {
+        projectData.gallery.forEach((img, index) => {
+          const imgElement = document.createElement("img");
+          imgElement.src = "/static/" + img;
+          imgElement.dataset.index = index;
+          imgElement.addEventListener("click", function () {
+            currentImageIndex = index;
+            updateMainImage();
+            updateActiveThumbnail();
+            updateImageCounter();
+          });
+          if (index === 0) {
+            imgElement.classList.add("active-thumbnail");
+          }
+          galleryDiv.appendChild(imgElement);
+        });
+      }
+
+      const gallerySection = document.querySelector(".gallery-section");
+      if (projectData.gallery && projectData.gallery.length > 1) {
+        gallerySection.style.display = "block";
+      } else {
+        gallerySection.style.display = "none";
+      }
+
+      updateImageCounter();
+      modal.style.display = "flex";
+      setTimeout(() => {
+        modal.classList.add("show");
+      }, 10);
+    }
+
+    function updateMainImage() {
+      const mainImage = document.getElementById("modal-main-image");
+      mainImage.style.opacity = 0;
+      setTimeout(() => {
+        if (
+          currentProject.gallery &&
+          currentProject.gallery[currentImageIndex]
+        ) {
+          mainImage.src =
+            "/static/" + currentProject.gallery[currentImageIndex];
+        } else {
+          mainImage.src = "/static/" + currentProject.mainImage;
+        }
+        mainImage.style.opacity = 1;
+      }, 200);
+    }
+
+    function updateActiveThumbnail() {
+      const thumbnails = document.querySelectorAll("#gallery img");
+      thumbnails.forEach((thumb, index) => {
+        thumb.classList.toggle("active-thumbnail", index === currentImageIndex);
+      });
+    }
+
+    function updateImageCounter() {
+      const counter = document.querySelector(".image-counter");
+      if (currentProject.gallery && currentProject.gallery.length > 1) {
+        counter.textContent = `${currentImageIndex + 1}/${
+          currentProject.gallery.length
+        }`;
+        counter.style.display = "block";
+      } else {
+        counter.style.display = "none";
+      }
+    }
+
+    document
+      .querySelector(".prev-arrow")
+      .addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (currentProject.gallery && currentProject.gallery.length > 0) {
+          currentImageIndex =
+            (currentImageIndex - 1 + currentProject.gallery.length) %
+            currentProject.gallery.length;
+          updateMainImage();
+          updateActiveThumbnail();
+          updateImageCounter();
+        }
+      });
+
+    document
+      .querySelector(".next-arrow")
+      .addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (currentProject.gallery && currentProject.gallery.length > 0) {
+          currentImageIndex =
+            (currentImageIndex + 1) % currentProject.gallery.length;
+          updateMainImage();
+          updateActiveThumbnail();
+          updateImageCounter();
+        }
+      });
+
+    document.addEventListener("keydown", function (e) {
+      if (modal.style.display === "flex") {
+        if (e.key === "ArrowLeft") {
+          document.querySelector(".prev-arrow").click();
+        } else if (e.key === "ArrowRight") {
+          document.querySelector(".next-arrow").click();
+        } else if (e.key === "Escape") {
+          closeModal();
+        }
+      }
+    });
+
+    function closeModal() {
+      modal.classList.remove("show");
+      setTimeout(() => {
+        modal.style.display = "none";
+      }, 300);
+    }
+
+    viewDetailBtns.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const projectData = JSON.parse(this.dataset.project);
+        openModal(projectData);
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    window.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Bid Modal Handling
+    const openBidButtons = document.querySelectorAll(".open-bid-modal");
+    const bidModal = document.getElementById("bidModal");
+    const closeBidBtn = document.querySelector(".close-bid");
+    const bidForm = document.getElementById("placeBidForm");
+    const projectIdInput = document.getElementById("projectId");
+
+    openBidButtons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        const projectId = this.getAttribute("data-project-id");
+        projectIdInput.value = projectId;
+        bidModal.style.display = "flex";
+        setTimeout(() => {
+          bidModal.classList.add("show");
+        }, 10);
+      });
+    });
+
+    closeBidBtn.addEventListener("click", function () {
+      bidModal.classList.remove("show");
+      setTimeout(() => {
+        bidModal.style.display = "none";
+      }, 300);
+      bidForm.reset();
+    });
+
+    window.addEventListener("click", function (event) {
+      if (event.target === bidModal) {
+        bidModal.classList.remove("show");
+        setTimeout(() => {
+          bidModal.style.display = "none";
+        }, 300);
+        bidForm.reset();
+      }
+    });
+
+    bidForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const formData = new FormData(bidForm);
+
+      fetch(bidForm.action, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Bid placed successfully!");
+            bidModal.classList.remove("show");
+            setTimeout(() => {
+              bidModal.style.display = "none";
+            }, 300);
+            bidForm.reset();
+          } else {
+            alert("Error placing bid: " + (data.message || "Unknown error"));
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("An error occurred while placing the bid.");
+        });
+    });
+
+    // Review modal specific setup
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewCloseBtn = document.querySelector('.review-modal-close');
+    const reviewForm = document.getElementById('reviewForm');
+
+    // Close review modal when clicking the close button
+    reviewCloseBtn.onclick = function() {
+        reviewModal.style.display = 'none';
+    }
+
+    // Handle review form submission
+    reviewForm.onsubmit = function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                const errorDiv = document.getElementById('reviewError');
+                errorDiv.textContent = data.error || 'An error occurred while submitting your review.';
+                errorDiv.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            const errorDiv = document.getElementById('reviewError');
+            errorDiv.textContent = 'An error occurred while submitting your review.';
+            errorDiv.style.display = 'block';
+        });
+    }
+});
+</script>
+{% endblock %}

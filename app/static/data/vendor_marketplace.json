@@ -1,0 +1,112 @@
+[
+    {
+      "product_id": 1,
+      "name": "Premium Cement",
+      "description": "High-quality cement for construction projects.",
+      "price_pkr": 126000,
+      "category": "Materials",
+      "vendor_name": "BuildPro Ltd.",
+      "contact_number": "+92-300-1234567",
+      "created_at": "2025-04-25T14:32:00",
+      "image": "/static/images/cement.webp"
+    },
+    {
+      "product_id": 2,
+      "name": "Steel Rods - 12mm",
+      "description": "High tensile strength steel rods.",
+      "price_pkr": 322140,
+      "category": "Materials",
+      "vendor_name": "IronBuilds",
+      "contact_number": "+92-321-9876543",
+      "created_at": "2025-04-27T10:12:00",
+      "image": "/static/images/steel.webp"
+    },
+    {
+      "product_id": 3,
+      "name": "Red Bricks",
+      "description": "Standard red clay bricks for masonry work.",
+      "price_pkr": 15000,
+      "category": "Materials",
+      "vendor_name": "BrickWorks",
+      "contact_number": "+92-333-4567890",
+      "created_at": "2025-04-28T09:15:00",
+      "image": "/static/images/brick.jpeg"
+    },
+    {
+      "product_id": 4,
+      "name": "Concrete Blocks",
+      "description": "Precast concrete blocks for quick construction.",
+      "price_pkr": 28000,
+      "category": "Materials",
+      "vendor_name": "StoneTech",
+      "contact_number": "+92-301-2345678",
+      "created_at": "2025-04-29T11:45:00",
+      "image": "/static/images/blocks.jpg"
+    },
+    {
+      "product_id": 5,
+      "name": "Construction Sand",
+      "description": "Fine river sand for plastering and mixing.",
+      "price_pkr": 5000,
+      "category": "Materials",
+      "vendor_name": "SandCo",
+      "contact_number": "+92-302-3456789",
+      "created_at": "2025-04-29T13:20:00",
+      "image": "/static/images/sand.jpeg"
+    },
+    {
+      "product_id": 6,
+      "name": "PVC Pipes - 4 inch",
+      "description": "Durable PVC pipes for plumbing and drainage.",
+      "price_pkr": 12000,
+      "category": "Plumbing",
+      "vendor_name": "PipeMasters",
+      "contact_number": "+92-304-5678901",
+      "created_at": "2025-04-29T15:30:00",
+      "image": "/static/images/pvc_pipes.jpg"
+    },
+    {
+      "product_id": 7,
+      "name": "Ceramic Floor Tiles",
+      "description": "High-quality ceramic tiles for flooring, 12x12 inches.",
+      "price_pkr": 45000,
+      "category": "Finishing",
+      "vendor_name": "TileTrendz",
+      "contact_number": "+92-305-6789012",
+      "created_at": "2025-04-29T16:45:00",
+      "image": "/static/images/tiles.jpg"
+    },
+    {
+      "product_id": 8,
+      "name": "Waterproof Paint",
+      "description": "Exterior waterproof paint, 10L bucket.",
+      "price_pkr": 35000,
+      "category": "Finishing",
+      "vendor_name": "ColorShield",
+      "contact_number": "+92-306-7890123",
+      "created_at": "2025-04-29T17:10:00",
+      "image": "/static/images/paint.jpg"
+    },
+    {
+      "product_id": 9,
+      "name": "Electrical Cables - 3mm",
+      "description": "Copper-core electrical cables for wiring.",
+      "price_pkr": 25000,
+      "category": "Electrical",
+      "vendor_name": "PowerLine",
+      "contact_number": "+92-307-8901234",
+      "created_at": "2025-04-29T18:00:00",
+      "image": "/static/images/cables.jpg"
+    },
+    {
+      "product_id": 10,
+      "name": "Ready-Mix Concrete",
+      "description": "Pre-mixed concrete for foundations and slabs.",
+      "price_pkr": 200000,
+      "category": "Materials",
+      "vendor_name": "ConcreteCo",
+      "contact_number": "+92-308-9012345",
+      "created_at": "2025-04-29T19:20:00",
+      "image": "/static/images/concrete.webp"
+    }
+]

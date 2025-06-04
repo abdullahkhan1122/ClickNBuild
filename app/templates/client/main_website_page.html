@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClickNBuild</title>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: white;
+        color: #1f1d1b;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      header {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        background-image: url("static/images/background-image.png");
+        background-position: center -50px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        text-align: left;
+        overflow: hidden;
+      }
+
+      header img {
+        position: absolute;
+        left: 35%;
+        transform: translateY(0);
+        width: 50%;
+        height: 100vh;
+        max-width: 100%;
+      }
+
+      header img {
+        position: absolute;
+        top: 70%;
+        transform: translateY(-50%);
+        width: 90%;
+        height: auto;
+      }
+
+      header h1 {
+        position: relative;
+        left: 50px;
+        font-size: 120px;
+        letter-spacing: 3px;
+        line-height: 1.3;
+        margin: 0;
+        width: 50%;
+        color: black;
+      }
+
+      .color1 {
+        color: #1f1d1b;
+      }
+
+      .color2 {
+        color: white;
+      }
+
+      .color3 {
+        color: #fb9702;
+      }
+
+      .tagline {
+        position: relative;
+        left: 65px;
+        color: white;
+        font-weight: bold;
+        font-size: 26px;
+        margin-top: 20px;
+        max-width: 800px;
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+
+      .logo-image {
+        position: absolute;
+        top: 38px;
+        left: -80px;
+        width: 300px;
+      }
+
+      .logo {
+        display: flex;
+        letter-spacing: 10px;
+        align-items: center;
+        margin-top: 80px;
+        margin-left: 42px;
+        font-size: 18px;
+      }
+
+      .logo strong {
+        color: #fb9702;
+      }
+
+      /* Hamburger Menu Styles */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        margin-right: 20px;
+      }
+
+      .hamburger .line {
+        width: 25px;
+        height: 3px;
+        background-color: black;
+        margin: 4px 0;
+      }
+
+      nav ul {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin-right: 50px;
+        margin-top: -70px;
+      }
+
+      nav ul li {
+        margin: 0 8px;
+        margin-top: 15px;
+      }
+
+      nav ul li a {
+        text-decoration: none;
+        color: black;
+        transition: all 0.3s ease;
+        /* padding: 8px 15px; */
+        border-radius: 5px;
+        margin: 35px;
+        font-size: 18px;
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      nav ul li a::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 2px;
+        background-color: #fb9702;
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        transform: scaleX(0);
+        transition: transform 0.3s ease-in-out;
+      }
+
+      nav ul li a:hover::after {
+        transform: scaleX(1);
+      }
+
+      .about {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 40px;
+        line-height: 1.5;
+        font-size: 18px;
+        width: 80%;
+        margin: 0 auto;
+        margin-top: 5%;
+      }
+
+      .about h2 {
+        margin-bottom: 35px;
+        font-size: 44px;
+        z-index: 2;
+      }
+
+      .about p {
+        position: relative;
+        text-align: center;
+        font-size: 22px;
+        width: 83%;
+        padding: auto;
+      }
+
+      .about img {
+        position: absolute;
+        width: 120px;
+        height: auto;
+        top: 40px;
+        opacity: 20%;
+      }
+
+      #side-container-img {
+        position: fixed;
+        width: 40%;
+        right: 0;
+        top: 20%;
+        z-index: -1;
+        opacity: 0.09;
+      }
+
+      #certified-builders {
+        background: transparent;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      #certified-builders h2 {
+        margin-bottom: 90px;
+        font-size: 44px;
+        z-index: 2;
+      }
+
+      .builder-container {
+        display: flex;
+        justify-content: center;
+        background-color: transparent;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .builder-profile {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border-radius: 10px;
+        align-items: center;
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 10px 15px 10px rgba(0, 0, 0, 0.1);
+        min-width: 350px;
+        max-height: 400px;
+        text-align: start;
+        position: relative;
+        z-index: 10;
+        opacity: 0;
+        transform: translateY(50px);
+        animation: fadeIn 0.8s ease-in forwards;
+      }
+
+      .builder-profile div {
+        margin-top: 120px;
+      }
+
+      .builder-profile img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        position: absolute;
+        box-shadow: 0px 1px 8px #fb9702;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 5px;
+        margin-bottom: 90px;
+        z-index: 10;
+      }
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .builder-profile:nth-child(1) {
+        animation-delay: 0.2s;
+      }
+
+      .builder-profile:nth-child(2) {
+        animation-delay: 0.4s;
+      }
+
+      .builder-profile:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+
+      .builder-profile:nth-child(4) {
+        animation-delay: 0.8s;
+      }
+
+      .builder-profile:hover {
+        transform: scale(1.05);
+        background-color: #ffa726;
+      }
+
+      /* Review section */
+
+      .reviews {
+        text-align: center;
+        padding: 50px;
+        min-height: 100vh;
+        margin-top: 50px;
+      }
+
+      .review-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 100%;
+        margin: auto;
+        padding: 70px;
+      }
+
+      .reviews h1 {
+        font-size: 48px;
+        margin-top: 50px;
+      }
+
+      .review-container {
+        display: flex;
+        gap: 20px;
+        overflow: hidden;
+        width: 90%;
+        margin: 0 auto;
+        justify-content: flex-start;
+        padding: 20px;
+        position: relative;
+      }
+
+      .review {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+        text-align: center;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        flex: 0 0 auto;
+        margin-bottom: 30px;
+      }
+
+      .review h4 {
+        margin-top: 10px;
+        font-size: 18px;
+      }
+
+      .review-buttons {
+        margin-top: 20px;
+        display: flex;
+        gap: 15px;
+      }
+
+      .prev-btn,
+      .next-btn {
+        background: #fb9702;
+        border: none;
+        color: white;
+        font-size: 16px;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .prev-btn:hover,
+      .next-btn:hover {
+        background: #ffa726;
+      }
+
+      /* Review Section Css End */
+
+      /* Contact Us section css Start */
+
+      .contact {
+        text-align: left;
+        padding: 40px;
+        background-color: #e8e8e2;
+        min-height: 100vh;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .contact h1 {
+        font-size: 72px;
+        letter-spacing: 10px;
+        line-height: 1.2;
+        width: 50%;
+        color: black;
+        margin-bottom: 40px;
+      }
+
+      .form-container {
+        background: #f3f4f1;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        max-width: 550px;
+        width: 100%;
+        margin-top: 50px;
+        margin-left: 25px;
+      }
+
+      .form-container form {
+        display: flex;
+        flex-direction: column;
+        margin-top: 15px;
+        margin-bottom: 35px;
+        margin-left: 10px;
+      }
+
+      .form-container h2 {
+        font-family: Arial, sans-serif;
+        font-size: 32px;
+        margin: 0;
+        text-align: center;
+      }
+
+      .form-container label {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      .form-container input,
+      .form-container textarea {
+        font-family: sans-serif;
+        width: 90%;
+        padding: 14px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+      }
+
+      .form-container button {
+        position: relative;
+        left: 15px;
+        width: 90%;
+        padding: 10px;
+        background-color: #ffa726;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 15px;
+      }
+
+      .form-container button:hover {
+        background-color: #fb8c00;
+      }
+
+      .form-container textarea {
+        resize: none;
+        min-height: 150px;
+      }
+
+      .form-container input:focus,
+      .form-container textarea:focus {
+        border-color: #fb9702;
+        box-shadow: 0px 0px 8px rgba(251, 151, 2, 0.5);
+        outline: none;
+      }
+
+      .contact-image {
+        position: absolute;
+        right: 250px;
+        bottom: 0;
+        width: 42%;
+        top: 115px;
+        height: auto;
+        z-index: 1;
+      }
+
+      .contact-image img {
+        width: 150%;
+        height: auto;
+      }
+
+      footer {
+        background-color: #1f1d1b;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        header {
+          position: relative;
+          background-position: center -5px;
+          width: 100%;
+          height: 60vh;
+        }
+
+        header img {
+          position: absolute;
+          left: 35%;
+          transform: translateY(0);
+          height: 100vh;
+          max-width: 100%;
+          top: 100%;
+        }
+
+        #modern-house-img {
+          position: absolute;
+          top: 77%;
+          transform: translateY(-50%);
+          width: 70%;
+          left: 48.5%;
+          height: auto;
+        }
+
+        .hamburger {
+          display: flex;
+          position: relative;
+          bottom: 35px;
+          width: 40px;
+        }
+
+        nav ul {
+          display: none;
+          flex-direction: column;
+          align-items: center;
+          background-color: white;
+          position: absolute;
+          top: 80px;
+          right: 20px;
+          width: 200px;
+          box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+          border-radius: 5px;
+          padding: 10px 0;
+        }
+
+        nav ul.active {
+          display: flex;
+        }
+
+        nav ul li {
+          margin: 10px 0;
+        }
+
+        nav ul li a {
+          margin: 10px;
+          font-size: 16px;
+        }
+
+        header h1 {
+          font-size: 60px;
+          left: 20px;
+          top: 20px;
+          width: 80%;
+          bottom: 100px;
+        }
+
+        .tagline {
+          left: 30px;
+          top: 20px;
+          font-size: 18px;
+        }
+
+        .logo-image {
+          width: 300px;
+          left: -50px;
+        }
+
+        #logo {
+          position: absolute;
+          top: 77%;
+          transform: translateY(-50%);
+          width: 60%;
+          left: 85px;
+          height: auto;
+        }
+
+        .logo {
+          margin-left: 20px;
+          margin-top: 60px;
+          font-size: 12px;
+        }
+
+        .about h2 {
+          font-size: 36px;
+        }
+
+        .about p {
+          font-size: 18px;
+          width: 90%;
+        }
+
+        .about img {
+          position: absolute;
+          width: 120px;
+          height: auto;
+          top: 40px;
+          opacity: 20%;
+        }
+
+        #side-container-img {
+          position: fixed;
+          width: 60%;
+          height: 80vh;
+          right: 0;
+          top: 20%;
+          z-index: -1;
+          opacity: 0.09;
+        }
+
+        .builder-profile {
+          max-width: 250px;
+          max-height: 450px;
+          line-height: 1.8;
+        }
+
+        .builder-profile img {
+          width: 80px;
+          height: 80px;
+        }
+
+        .reviews h1 {
+          font-size: 36px;
+        }
+
+        .review {
+          width: 250px;
+        }
+
+        .contact h1 {
+          font-size: 48px;
+          width: 80%;
+        }
+
+        .form-container {
+          max-width: 90%;
+          margin-left: 0;
+        }
+
+        .form-container {
+          margin-bottom: 150px;
+          max-width: 350px;
+        }
+
+        .form-container form {
+          margin-bottom: 25px;
+        }
+
+        .form-container h2 {
+          font-size: 28px;
+          margin-top: 10px;
+        }
+
+        .contact-image img {
+          display: none;
+        }
+
+        .contact h1 {
+          font-size: 48px;
+          letter-spacing: 8px;
+          width: 70%;
+          margin: 0px;
+        }
+      }
+
+      .review {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .review-meta {
+        margin-top: 15px;
+    }
+    
+    .rating {
+        color: #fb9702;
+        margin: 5px 0;
+    }
+    
+    .star {
+        font-size: 1.2em;
+    }
+    
+    .star.filled {
+        color: #fb9702;
+    }
+    
+    .no-reviews {
+        text-align: center;
+        padding: 20px;
+        color: #666;
+        font-style: italic;
+    }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <div class="logo-image">
+          <img src="static/images/logo1.png" alt="clicknbuild-logo" id="logo" />
+        </div>
+        <div class="logo">ClickN<strong>Build</strong></div>
+        <div class="hamburger" onclick="toggleMenu()">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+        <ul id="nav-links">
+          <li><a href="#home" onclick="closeMenu()">Home</a></li>
+          <li><a href="#about" onclick="closeMenu()">About Us</a></li>
+          <li><a href="#review" onclick="closeMenu()">Review</a></li>
+          <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+          <li><a href="signup" onclick="closeMenu()">Join Us</a></li>
+        </ul>
+      </nav>
+
+      <h1>
+        <span class="color1">Click.</span> <span class="color2">Build.</span>
+        <span></span><span class="color3">Transform</span>
+      </h1>
+      <p class="tagline">Your Dream Project Starts Here!</p>
+      <img
+        src="static/images/image-2.png"
+        alt="Modern-house Image"
+        id="modern-house-img"
+      />
+    </header>
+
+    <div class="about-container">
+      <img
+        src="static/images/copy2.png"
+        alt="crane-pic"
+        id="side-container-img"
+      />
+      <section class="about" id="about">
+        <h2>About <span style="color: #fb9702">Us</span></h2>
+        <p>
+          ClickNBuild is more than just a platform. We genuinely care about your
+          construction journey. From understanding your vision to connecting you
+          with trusted experts, we simplify the process with innovative tools
+          and dedicated support.
+        </p>
+        <img src="static/images/click-image.png" alt="Click-image" />
+      </section>
+      <section id="certified-builders">
+        <h2>Top Certified <span style="color: #fb9702">Builders</span></h2>
+        <div class="builder-container">
+          {% if builders %}
+            {% for builder in builders %}
+              <div class="builder-profile">
+                <img src="{{ builder.image_url if builder.image_url else url_for('static', filename='images/default_profile.png') }}" 
+                     alt="profile-{{ builder.username }}" />
+                <div>
+                  <p><strong>Builder Name:</strong> {{ builder.username }}</p>
+                  <p><strong>Experience:</strong> {{ builder.total_projects }}+ Projects</p>
+                  <p><strong>Specialization:</strong> Construction</p>
+                  <p><strong>Rating:</strong> {{ builder.rating }}</p>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p style="text-align: center; color: gray; font-style: italic;">No certified builders available at the moment.</p>
+          {% endif %}
+        </div>
+      </section>
+      
+    
+
+
+
+
+
+
+    <!-- REVIEWS -->
+    <section class="reviews" id="review">
+      <h1>Client <span style="color: #fb9702">Reviews</span></h1>
+      <div class="review-wrap">
+          {% if reviews %}
+          <div class="review-container">
+              {% for review in reviews %}
+              <div class="review">
+                  <p>{{ review.comment }}</p>
+                  <div class="review-meta">
+                      <h4>- {{ review.username }}</h4>
+                      <div class="rating">
+                          {% for i in range(1, 6) %}
+                          <span class="star {% if i <= review.rating %}filled{% endif %}">★</span>
+                          {% endfor %}
+                      </div>
+                      <small>{{ review.created_at.strftime('%B %d, %Y') }}</small>
+                  </div>
+              </div>
+              {% endfor %}
+          </div>
+          {% else %}
+          <p class="no-reviews">No client reviews yet.</p>
+          {% endif %}
+      </div>
+  </section>
+
+
+
+
+    <section class="contact" id="contact">
+      <div class="contact-image">
+        <img
+          src="static/images/contact-image-copy.png"
+          alt="modern-house-image"
+        />
+      </div>
+      <h1>
+        Say hello to <span style="color: #fb9702">brighter days</span> together
+      </h1>
+
+      <div class="form-container">
+        <h2>Contact <span style="color: #fb9702"> Us</span></h2>
+        <form method="POST" action="{{ url_for('client.contact_form') }}">
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            required
+          />
+
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Enter your message"
+            rows="4"
+            required
+          ></textarea>
+
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 ClickNBuild. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+      // To toggle the mobile menu
+      function toggleMenu() {
+        const navLinks = document.getElementById("nav-links");
+        navLinks.classList.toggle("active");
+      }
+
+      // Closing the menu when link is clicked
+      function closeMenu() {
+        const navLink = document.getElementById("nav-links");
+        navLink.classList.remove("active");
+      }
+
+      // Close the menu when clicking outside
+      document.addEventListener("click", (event) => {
+        const navLinks = document.getElementById("nav-links");
+        const hamburger = document.querySelector(".hamburger");
+        if (
+          !navLinks.contains(event.target) &&
+          !hamburger.contains(event.target)
+        ) {
+          navLinks.classList.remove("active");
+        }
+      });
+
+      // Review button toggle functionality left or right
+      const reviewContainer = document.querySelector(".review-container");
+      const prevBtn = document.querySelector(".prev-btn");
+      const nextBtn = document.querySelector(".next-btn");
+
+      const cardWidth = document.querySelector(".review").offsetWidth + 20; // Card width + gap
+
+      prevBtn.addEventListener("click", () => {
+        reviewContainer.scrollBy({ left: -cardWidth, behavior: "smooth" });
+      });
+
+      nextBtn.addEventListener("click", () => {
+        reviewContainer.scrollBy({ left: cardWidth, behavior: "smooth" });
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('.form-container form');
+        if (form) {
+          form.addEventListener('submit', function(event) {
+            
+            alert("Your message has been sent successfully!");
+          });
+        }
+      });
+      
+
+
+      // Review Functionality
+    </script>
+    
+  </body>
+</html>

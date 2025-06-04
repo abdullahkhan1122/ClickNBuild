@@ -1,0 +1,140 @@
+{% extends 'client/base.html' %} {% block title %}Payments - ClickNBuild{%
+endblock %} {% block style %}
+<style>
+  .payments-section {
+    padding: 2rem;
+    background-color: #f9f9f9;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #343a40;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 6px;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  .table th,
+  .table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 15px;
+    color: #333;
+  }
+
+  .table th {
+    background-color: #343a40;
+    color: white;
+    font-weight: 600;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f1f3f5;
+  }
+
+  .badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .bg-success {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .bg-warning {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .btn-pay {
+    background-color: #007bff;
+    border: none;
+    padding: 8px 14px;
+    color: white;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-pay:hover {
+    background-color: #0056b3;
+  }
+
+  .empty-state {
+    padding: 40px;
+    text-align: center;
+    background: white;
+    border-radius: 10px;
+    color: #888;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+  }
+</style>
+{% endblock %} {% block content %}
+<section class="payments-section container">
+  <h2>Your Project Payments</h2>
+
+  {% if payments %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Project ID</th>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payment in payments %}
+      <tr>
+        <td>#{{ payment.project.project_id }}</td>
+        <td>{{ payment.project.title }}</td>
+        <td>Rs {{ payment.amount_due }}</td>
+        <td>
+          {% if payment.status == 'Paid' %}
+          <span class="badge bg-success">Paid</span>
+          {% else %}
+          <span class="badge bg-warning">Pending</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if payment.status == 'Pending' %}
+          <form
+            method="POST"
+            action="{{ url_for('client.create_checkout_session', payment_id=payment.payment_id) }}"
+          >
+            <button type="submit" class="btn-pay">Pay with Card</button>
+          </form>
+          {% else %}
+          <span class="text-muted">No action needed</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <h3>No Payments Found</h3>
+    <p>You have no pending or completed payments at this time.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

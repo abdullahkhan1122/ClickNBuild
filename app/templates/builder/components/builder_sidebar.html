@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      .sidebar {
+        width: 280px;
+        background: #4a5759;
+        color: #ffffff;
+        padding: 20px 0;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        overflow-y: auto;
+      }
+
+      .sidebar-header {
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .sidebar-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .sidebar-menu li {
+        padding: 15px 20px;
+        margin: 5px 10px;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .sidebar-menu li::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.027)
+        );
+        transition: all 0.3s ease;
+        z-index: 0;
+      }
+
+      .sidebar-menu li:hover::before {
+        transform: translateX(100%);
+      }
+
+      .sidebar-menu li:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateX(5px);
+      }
+
+      .sidebar-menu li.active {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .sidebar-menu a {
+        color: #ffffff;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .sidebar-menu i {
+        margin-right: 15px;
+        width: 20px;
+        text-align: center;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-menu li:hover i {
+        transform: scale(1.2);
+      }
+
+      .sidebar-menu span {
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-menu li:hover span {
+        transform: translateX(5px);
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.active {
+          transform: translateX(0);
+        }
+      }
+
+      /* Ensure main content has proper margin to not overlap with sidebar */
+      main {
+        padding: 20px;
+        height: calc(100vh - 100px);
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="sidebar" id="builderSidebar">
+      <div class="sidebar-header">
+        <h2></h2>
+      </div>
+      <ul class="sidebar-menu">
+        <li
+          class="{{ 'active' if request.endpoint == 'builder_dashboard' else '' }}"
+        >
+          <a href="{{ url_for('builder.builder_dashboard') }}">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li
+          class="{{ 'active' if request.endpoint == 'builder_projects' else '' }}"
+        >
+          <a href="{{ url_for('builder.builder_projects') }}">
+            <i class="fas fa-project-diagram"></i>
+            <span>Projects</span>
+          </a>
+        </li>
+        <li
+          class="{{ 'active' if request.endpoint == 'builder_proposals' else '' }}"
+        >
+          <a href="{{ url_for('builder.builder_proposals') }}">
+            <i class="fas fa-file-alt"></i>
+            <span>Proposals</span>
+          </a>
+        </li>
+        <li
+          class="{{ 'active' if request.endpoint == 'builder_payments' else '' }}"
+        >
+          <a href="{{ url_for('builder.builder_payments') }}">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+          </a>
+        </li>
+        <li
+          class="{{ 'active' if request.endpoint == 'builder_reviews' else '' }}"
+        >
+          <a href="{{ url_for('builder.builder_reviews') }}">
+            <i class="fas fa-star"></i>
+            <span>Reviews</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+  </body>
+</html>

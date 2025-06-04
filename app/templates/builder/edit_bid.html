@@ -1,0 +1,45 @@
+{% extends 'builder/builder_base.html' %} {% block title %}Edit Bid{% endblock
+%} {% block content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/builder_css/builder_proposals.css') }}"
+/>
+
+<div class="container">
+  <h2>Edit Your Bid</h2>
+  <form method="POST">
+    <div class="form-group">
+      <label>Estimated Cost (Rs):</label>
+      <input
+        type="number"
+        name="estimated_cost"
+        class="form-control"
+        value="{{ bid.estimated_cost }}"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label>Timeline (Weeks):</label>
+      <input
+        type="number"
+        name="timeline"
+        class="form-control"
+        value="{{ bid.timeline }}"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label>Proposal:</label>
+      <textarea name="proposal" class="form-control" rows="5" required>
+{{ bid.proposal }}</textarea
+      >
+    </div>
+    <button type="submit" class="btn btn-success">Update Bid</button>
+    <a
+      href="{{ url_for('builder.builder_proposals') }}"
+      class="btn btn-secondary"
+      >Cancel</a
+    >
+  </form>
+</div>
+{% endblock %}

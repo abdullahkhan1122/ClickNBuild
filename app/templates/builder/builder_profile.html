@@ -1,0 +1,259 @@
+{% extends 'builder/builder_base.html' %}
+
+{% block title %} Profile - ClickNBuild {% endblock %}
+
+{% block style %}
+<style>
+  body {
+    background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+    min-height: 100vh;
+  }
+  .profile-outer {
+    min-height: calc(100vh - 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .profile-container {
+    width: 100%;
+    max-width: 750px;
+    min-height: 480px;
+    background: rgba(255,255,255,0.98);
+    border-radius: 24px;
+    box-shadow: 0 12px 40px 0 rgba(44, 87, 89, 0.16);
+    padding: 40px 32px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    animation: fadeIn 0.8s cubic-bezier(.39,.575,.56,1) both;
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: none; }
+  }
+  .profile-picture {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 6px solid #4a5759;
+    box-shadow: 0 4px 32px rgba(44, 87, 89, 0.13);
+    margin-bottom: 18px;
+    background: #f4f7fa;
+    transition: box-shadow 0.3s, border 0.3s;
+  }
+  .profile-picture:hover {
+    box-shadow: 0 8px 48px rgba(44, 87, 89, 0.22);
+    border-color: #4a6fa5;
+  }
+  .profile-container h2 {
+    margin: 14px 0 0 0;
+    font-size: 2.2rem;
+    color: #222;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  .profile-container p.email {
+    color: #4a6fa5;
+    font-size: 1.12rem;
+    margin: 7px 0 22px 0;
+    font-weight: 600;
+  }
+  .profile-info {
+    width: 95%;
+    min-width: 340px;
+    min-height: 210px;
+    margin: 0 auto 0 auto;
+    background: #f8fafd;
+    border-radius: 20px;
+    padding: 38px 32px 28px 32px;
+    box-shadow: 0 6px 24px rgba(44, 87, 89, 0.09);
+    margin-bottom: 32px;
+    text-align: left;
+    font-size: 1.13rem;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    row-gap: 22px;
+    column-gap: 32px;
+  }
+  .profile-info p,
+  .profile-info input,
+  .profile-info textarea {
+    margin: 0;
+    font-size: 1.08rem;
+    color: #444;
+  }
+  .profile-info strong {
+    color: #222;
+    font-weight: 700;
+    min-width: 110px;
+    display: inline-block;
+  }
+  input,
+  textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    margin-top: 7px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    border: 1.5px solid #d1dbe6;
+    font-size: 1rem;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(44, 87, 89, 0.04);
+    transition: border 0.2s, box-shadow 0.2s;
+    display: block;
+  }
+  input:focus, textarea:focus {
+    border: 1.5px solid #4a6fa5;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(44, 87, 89, 0.10);
+  }
+  input[type="file"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 6px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1.5px solid #d1dbe6;
+    font-size: 1rem;
+    margin-top: 7px;
+    margin-bottom: 15px;
+    box-shadow: 0 1px 4px rgba(44, 87, 89, 0.04);
+    display: block;
+  }
+  .edit-btn,
+  .submit-btn {
+    background: #46668a;
+    color: #fff;
+    padding: 13px 32px;
+    margin-top: 22px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.08rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(44, 87, 89, 0.10);
+    transition: background 0.2s, box-shadow 0.2s;
+    letter-spacing: 1px;
+  }
+  .edit-btn:hover,
+  .submit-btn:hover {
+    background: #385377;
+    box-shadow: 0 4px 16px rgba(44, 87, 89, 0.18);
+  }
+  .edit-fields {
+    background: #f6fafd;
+    border-radius: 12px;
+    padding: 18px 12px;
+    margin-top: 8px;
+    display: none;
+  }
+  .edit-fields label {
+    font-weight: 700;
+    color: #222;
+    min-width: 110px;
+    display: inline-block;
+    margin-bottom: 0;
+  }
+  .edit-fields input,
+  .edit-fields textarea {
+    margin-bottom: 0;
+  }
+  .edit-fields input[type="file"] {
+    grid-column: 2 / 3;
+  }
+  #save-btn {
+    grid-column: 1 / span 2;
+    justify-self: center;
+    margin-top: 18px;
+  }
+  @media (max-width: 800px) {
+    .profile-container {
+      max-width: 98vw;
+      padding: 16px 2vw;
+    }
+    .profile-info {
+      padding: 12px 2vw 8px 2vw;
+    }
+  }
+  @media (max-width: 500px) {
+    .profile-container {
+      padding: 2px 0;
+    }
+    .profile-info {
+      padding: 4px 1vw 4px 1vw;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-outer">
+  <div class="profile-container">
+    {% if builder.profile_picture %}
+      <img id="profilePreview" src="{{ url_for('static', filename=builder.profile_picture) }}" alt="Profile Picture" class="profile-picture" />
+    {% else %}
+      <img id="profilePreview" src="{{ url_for('static', filename='images/default_profile.png') }}" alt="Default Profile" class="profile-picture" />
+    {% endif %}
+    <h2>{{ user.username }}</h2>
+    <p class="email">{{ user.email }}</p>
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('builder.update_profile') }}">
+      <div class="profile-info">
+        <span class="profile-view-row"><strong>Phone:</strong></span><span class="profile-view-row">{{ user.phone }}</span>
+        <span class="profile-view-row"><strong>Location:</strong></span><span class="profile-view-row">{{ builder.location or 'N/A' }}</span>
+        <span class="profile-view-row"><strong>Company:</strong></span><span class="profile-view-row">{{ builder.company_name or 'N/A' }}</span>
+        <span class="profile-view-row"><strong>Specialization:</strong></span><span class="profile-view-row">{{ builder.specialization or 'N/A' }}</span>
+        <span class="profile-view-row"><strong>Experience:</strong></span><span class="profile-view-row">{{ builder.experience or 'N/A' }}</span>
+        <span class="profile-view-row"><strong>About:</strong></span><span class="profile-view-row">{{ builder.about or 'N/A' }}</span>
+      </div>
+      <button type="button" class="edit-btn" id="edit-btn">Edit Info</button>
+      <div id="edit-mode" class="edit-fields">
+        <label for="edit-phone"><strong>Phone:</strong></label>
+        <input id="edit-phone" type="text" name="phone" value="{{ user.phone or '' }}" />
+        <label for="edit-location"><strong>Location:</strong></label>
+        <input id="edit-location" type="text" name="location" value="{{ builder.location or '' }}" />
+        <label for="edit-company"><strong>Company:</strong></label>
+        <input id="edit-company" type="text" name="company_name" value="{{ builder.company_name or '' }}" />
+        <label for="edit-specialization"><strong>Specialization:</strong></label>
+        <input id="edit-specialization" type="text" name="specialization" value="{{ builder.specialization or '' }}" />
+        <label for="edit-experience"><strong>Experience:</strong></label>
+        <input id="edit-experience" type="text" name="experience" value="{{ builder.experience or '' }}" />
+        <label for="edit-about"><strong>About:</strong></label>
+        <textarea id="edit-about" name="about" rows="4">{{ builder.about or '' }}</textarea>
+        <label for="profilePictureInput"><strong>Change Profile Picture:</strong></label>
+        <input type="file" name="profile_picture" id="profilePictureInput" accept="image/*" />
+        <button type="submit" class="submit-btn" id="save-btn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  const editBtn = document.getElementById("edit-btn");
+  const editMode = document.getElementById("edit-mode");
+  const saveBtn = document.getElementById("save-btn");
+  const profilePictureInput = document.getElementById("profilePictureInput");
+  const profilePreview = document.getElementById("profilePreview");
+  const profileInfo = document.querySelector('.profile-info');
+  editBtn.addEventListener("click", function () {
+    profileInfo.style.display = 'none';
+    editMode.style.display = "grid";
+    editMode.style.gridTemplateColumns = "max-content 1fr";
+    editMode.style.rowGap = "18px";
+    editMode.style.columnGap = "24px";
+    editMode.style.alignItems = "center";
+    saveBtn.style.display = "inline-block";
+    editBtn.style.display = "none";
+  });
+  if (profilePictureInput) {
+    profilePictureInput.addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        profilePreview.src = URL.createObjectURL(file);
+      }
+    });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClickNBuild - Builder</title>
+    <link
+      rel="stylesheet"
+      href="/static/css/builder_css/builder_homepage.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo-container">
+        <div class="logo-img">
+          <img src="static/images/logo.png" alt="ClickNBuild-Logo" />
+        </div>
+        <div class="logo">ClickN<span>Build</span></div>
+      </div>
+      <nav>
+        <button
+          class="hamburger"
+          aria-label="Toggle Navigation"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-menu">
+          <li><a href="/builder-homepage">Home</a></li>
+          <li><a href="/builder-dashboard">Dashboard</a></li>
+          <li><a href="/builder-profile">Profile</a></li>
+          <li><a href="{{ url_for('auth.logout') }}">Logout</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <!-- Rest of your HTML remains unchanged -->
+    <section class="container">
+      <div class="container-text">
+        <h1>Grow Your Business with ClickNBuild</h1>
+        <p>
+          Bid on construction projects, showcase your expertise, and expand your
+          network.
+        </p>
+        <button><a href="builder-dashboard">View Dashboard</a></button>
+        <button><a href="posted-projects">Explore Projects</a></button>
+      </div>
+      <div class="container-image">
+        <img
+          src="/static/builder_images/home-page-1.gif"
+          alt="Builder-Illustration"
+        />
+      </div>
+    </section>
+    <section class="how-it-works">
+      <h2>How It Works</h2>
+      <div class="steps">
+        <div class="step">
+          <img src="/static/builder_images/search.png" alt="Browse Projects" />
+          <h3>Browse Projects</h3>
+          <p>Discover projects that match your expertise and location.</p>
+        </div>
+        <div class="step">
+          <img src="/static/builder_images/send.png" alt="send Bids" />
+          <h3>Submit Your Bid</h3>
+          <p>
+            Provide competitive quotes and detailed proposals to potential
+            clients.
+          </p>
+        </div>
+        <div class="step">
+          <img src="/static/builder_images/shuttle.png" alt="Start Work" />
+          <h3>Start Construction</h3>
+          <p>
+            Win projects and collaborate with clients to bring their visions to
+            life.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="marketplace">
+      <h2>Marketplace</h2>
+      <div class="marketplace-grid">
+          {% for product in products %}
+          <div class="product-card">
+              <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+              <div class="product-info">
+                  <h3 class="product-name">{{ product.name }}</h3>
+                  <p class="product-description">{{ product.description }}</p>
+  
+                  <div class="product-meta">
+                      <span>{{ product.vendor_name }}</span>
+                      <span>{{ product.category }}</span>
+                      <span>{{ product.created_at.strftime('%Y-%m-%d') }}</span>
+                      <span>{{ product.contact_number }}</span>
+                  </div>
+  
+                  <div class="product-price-row">
+                      <span class="product-price">Rs {{ product.price_pkr }}</span>
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
+      </div>
+  
+      <div class="browse">
+          <p><a href="{{ url_for('builder.builder_marketplace') }}">Browse all</a></p>
+      </div>
+  </section>
+
+    <footer>
+      <p>© 2025 ClickNBuild. All Rights Reserved.</p>
+    </footer>
+    <script>
+      const hamburger = document.querySelector(".hamburger");
+      const navMenu = document.querySelector(".nav-menu");
+      hamburger.addEventListener("click", () => {
+        const isExpanded = hamburger.getAttribute("aria-expanded") === "true";
+        hamburger.setAttribute("aria-expanded", !isExpanded);
+        hamburger.classList.toggle("active");
+        navMenu.classList.toggle("active");
+      });
+      // Optional: Close menu when a link is clicked
+      document.querySelectorAll(".nav-menu a").forEach((link) => {
+        link.addEventListener("click", () => {
+          hamburger.setAttribute("aria-expanded", "false");
+          hamburger.classList.remove("active");
+          navMenu.classList.remove("active");
+        });
+      });
+    </script>
+  </body>
+</html>

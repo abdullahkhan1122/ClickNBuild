@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClickNBuild</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: white;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 20px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 60px;
+
+        }
+
+        .logo-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo-img {
+            position: absolute;
+            top: -8px;
+            left: 8px;
+        }
+
+        .logo-img img {
+
+            position: absolute;
+            bottom: -100px;
+            width: 180px;
+            height: auto;
+        }
+
+        .logo {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 45px;
+            margin-left: 35px;
+            letter-spacing: 4px;
+        }
+
+        .logo span {
+            color: #ffa729;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin: 0 8px;
+            margin-top: 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: black;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            margin: 45px;
+            font-size: 18px;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #aec3b0;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            transform: scaleX(0);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        nav ul li a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* Container Section */
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px;
+            background: #aec3b0;
+            color: #fff;
+            width: 100%;
+            min-height: 90vh;
+        }
+
+        .container-text {
+            max-width: 50%;
+            margin-bottom: 120px;
+            text-align: left;
+        }
+
+        .container-text h1 {
+            font-size: 68px;
+            margin-bottom: 20px;
+        }
+
+        .container-text p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            color: #f4f4f4;
+        }
+
+        .container-text button {
+            margin: 10px;
+            padding: 15px 20px;
+            border: none;
+            background: #4a5759;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container-text button:hover {
+            background: #f4f4f4;
+            color: black;
+        }
+
+        .container-image img {
+            width: 90%;
+            height: 70vh;
+            margin-right: 100px;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            margin-top: 100px;
+            padding: 50px;
+            background: #fff;
+            color: #333;
+            position: relative;
+            margin-bottom: 100px;
+        }
+
+        .how-it-works h2 {
+            font-size: 34px;
+            margin-bottom: 50px;
+            color: #333;
+            position: relative;
+            z-index: 1;
+        }
+
+        .how-it-works::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background-image: url('static/images/how-it-work.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 1;
+            opacity: 0.1;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 100px;
+        }
+
+        .step {
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: start;
+            background: #eef0eb;
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-10px);
+        }
+
+        .step img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .step h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .step p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Marketplace Section */
+        .marketplace {
+            padding: 50px;
+            background-color: #f4f4f4;
+            color: #333;
+            position: relative;
+            z-index: 1;
+        }
+
+
+        .marketplace::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 150px;
+            background-image: url('static/images/how-it-work.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin-top: 25px;
+            z-index: 1;
+            opacity: 0.1;
+        }
+
+
+        .marketplace h2 {
+            font-size: 34px;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .items {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 70px;
+        }
+
+        .item {
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .item:hover {
+            transform: translateY(-10px);
+        }
+
+        .item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .item h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .item p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .browse {
+
+            text-align: end;
+            text-decoration: underline;
+            margin-top: 10px;
+            margin-right: 200px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px;
+            background: #4a5759;
+            color: #fff;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* For Responsiveness */
+        @media (max-width: 768px) {
+
+            header {
+                padding: 5px 10px;
+                height: 50px;
+            }
+
+            .logo-img img {
+                width: 40px;
+            }
+
+            .logo {
+                font-size: 18px;
+                margin-left: 50px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+
+            .container {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .container-text {
+                max-width: 100%;
+                text-align: center;
+            }
+
+            .container-text h1 {
+                font-size: 36px;
+            }
+
+            .steps,
+            .items {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .step,
+            .item {
+                width: 80%;
+            }
+        }
+
+        
+        .marketplace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .product-card {
+            background-color: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eee;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-info {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .product-name h3{
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        
+        .product-description {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.4;
+            margin: 0;
+        }
+        
+        .product-meta {
+            font-size: 0.85rem;
+            color: #777;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        
+        .product-price-row {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4a5759;
+        }
+        
+        .browse {
+            position: relative;
+            right: 17.5%;
+            margin: 1px 2px;
+        }
+        
+        .browse a {
+            color: #2c3e50;
+            text-decoration: underline;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .browse a:hover {
+            color: #2c3e50;
+            text-decoration: none;
+        }
+        
+        
+    </style>
+</head>
+
+<body>
+
+     
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-img">
+                <img src="static/images/logo.png" alt="ClickNBuild-Logo">
+            </div>
+            <div class="logo">ClickN<span>Build</span></div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/client-homepage">Home</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/marketplace">Marketplace</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    <section class="container">
+        <div class="container-text">
+            <h1>Connect with Top Builders for Your Project</h1>
+            <p>Post your construction project and get competitive bids from verified builders.</p>
+            <button><a href="/dashboard">Post a Project</a></button>
+            <button><a href="my_projects">Explore Projects</a></button>
+
+        </div>
+        <div class="container-image">
+            <img src="static/images/main-content-img.jpg" alt="Construction-Book-img">
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <img src="static/images/post-project.png" alt="Post Your Project">
+                <h3>Post Your Project</h3>
+                <p>Describe your project details, budget, and timeline requirements.</p>
+            </div>
+            <div class="step">
+                <img src="static/images/receive-bid.png" alt="Receive Bids">
+                <h3>Receive Bids</h3>
+                <p>Get competitive bids from qualified builders in your area.</p>
+            </div>
+            <div class="step">
+                <img src="static/images/start-building.png" alt="Start Building">
+                <h3>Start Building</h3>
+                <p>Choose your builder and begin your construction project.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="marketplace">
+        <h2>Marketplace</h2>
+        <div class="marketplace-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-description">{{ product.description }}</p>
+    
+                    <div class="product-meta">
+                        <span>{{ product.vendor_name }}</span>
+                        <span>{{ product.category }}</span>
+                        <span>{{ product.created_at.strftime('%Y-%m-%d') }}</span>
+                        <span>{{ product.contact_number }}</span>
+                    </div>
+    
+                    <div class="product-price-row">
+                        <span class="product-price">Rs {{ product.price_pkr }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    
+        <div class="browse">
+            <p><a href="{{ url_for('client.marketplace') }}">Browse all</a></p>
+        </div>
+    </section>
+    
+
+
+
+    <footer>
+        <p>&copy; 2025 ClickNBuild. All Rights Reserved.</p>
+    </footer>
+</body>
+
+</html>
