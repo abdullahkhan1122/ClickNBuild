@@ -51,3 +51,11 @@ pip install -r requirements.txt
 
 # Run the app
 flask run
+
+```
+## 🛠️ Database Setup (MySQL)
+
+You can import the entire database (tables + sample data) using :
+NOTE : the database must be in the project directory or at the place where you are making your database.
+```bash
+mysql -u root -p -e "CREATE DATABASE ClickNBuild; USE ClickNBuild; SOURCE ClickNBuild.sql;"
